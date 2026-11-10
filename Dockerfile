@@ -1,0 +1,9 @@
+FROM php:8.2-apache
+RUN docker-php-ext-install mysqli pdo pdo_mysql \
+    && a2enmod rewrite \
+    && sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
+WORKDIR /var/www/html
+COPY . /var/www/html/
+RUN chown -R www-data:www-data /var/www/html
+EXPOSE 80
+HEALTHCHECK --interval=30s --timeout=5s CMD curl -f http://localhost/ || exit 1
